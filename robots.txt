@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://malikfgh-13.github.io/shopnova/sitemap.xml
