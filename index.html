@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,19 +6,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ShopNova - Global Shopping</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,Helvetica,sans-serif;background:#f5f5f5;color:#222}
-button,input,select{font:inherit}
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 
 header{background:#fff;position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .top{max-width:1400px;margin:auto;min-height:72px;padding:12px 25px;display:flex;align-items:center;gap:25px}
 .logo{font-size:29px;font-weight:800;color:#222;white-space:nowrap;cursor:pointer}
 .logo span{color:#ff6a00}
+
 .search{display:flex;flex:1;max-width:700px}
 .search input{width:100%;height:44px;border:2px solid #ff6a00;border-right:0;padding:0 15px;outline:none;border-radius:6px 0 0 6px}
 .search button{width:95px;border:0;background:#ff6a00;color:white;border-radius:0 6px 6px 0;font-weight:bold}
+
 .header-actions{display:flex;gap:15px;align-items:center}
 .header-actions button{background:none;border:0;font-size:14px}
 .cart-btn{font-size:22px!important}
@@ -53,13 +58,16 @@ header{background:#fff;position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px r
 .products{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
 .product{background:#fff;border:1px solid #ddd;border-radius:9px;overflow:hidden;transition:.2s}
 .product:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.08)}
-.product-image{height:190px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:75px;position:relative}
-.wish{position:absolute;right:10px;top:10px;border:0;background:#fff;width:36px;height:36px;border-radius:50%;font-size:20px}
+.product-image{height:190px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:75px;position:relative;overflow:hidden}
+.product-image img{width:100%;height:100%;object-fit:cover}
+.wish{position:absolute;right:10px;top:10px;border:0;background:#fff;width:36px;height:36px;border-radius:50%;font-size:20px;z-index:2}
+
 .product-info{padding:15px}
 .product-info h3{font-size:15px;line-height:1.4;height:43px;overflow:hidden}
 .rating{color:#f5a000;font-size:13px;margin-top:8px}
 .price{color:#ff6a00;font-size:21px;font-weight:bold;margin-top:10px}
 .old{color:#999;text-decoration:line-through;font-size:12px;margin-top:4px}
+
 .product-actions{display:flex;gap:8px;margin-top:13px}
 .view-btn,.buy-btn{flex:1;padding:10px;border-radius:5px;font-weight:bold}
 .view-btn{border:1px solid #ff6a00;background:#fff;color:#ff6a00}
@@ -84,36 +92,51 @@ footer p,footer button{display:block;color:#aaa;background:none;border:0;text-al
 .modal-box{background:#fff;width:100%;max-width:850px;max-height:90vh;overflow:auto;border-radius:12px;padding:30px;position:relative}
 .close{position:absolute;right:18px;top:15px;border:0;background:none;font-size:28px}
 .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
-.detail-image{height:350px;background:#f1f1f1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:110px}
+.detail-image{height:350px;background:#f1f1f1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:110px;overflow:hidden}
+.detail-image img{width:100%;height:100%;object-fit:cover}
 .detail h2{font-size:28px;margin-bottom:12px}
 .detail-rating{color:#f5a000;margin:10px 0}
 .detail-price{font-size:32px;color:#ff6a00;font-weight:bold;margin:20px 0}
 .detail-description{color:#666;line-height:1.7;margin-bottom:20px}
 .detail-buy{width:100%;padding:15px;border:0;background:#ff6a00;color:white;border-radius:6px;font-weight:bold}
 
-/* CART */
-.cart-list{margin-top:20px}
-.cart-item{display:flex;justify-content:space-between;gap:15px;padding:15px 0;border-bottom:1px solid #ddd}
-.remove{border:0;background:#eee;padding:7px 10px;border-radius:5px}
-.cart-total{text-align:right;font-size:22px;font-weight:bold;margin:20px 0}
-.checkout{width:100%;padding:14px;background:#ff6a00;color:white;border:0;border-radius:6px;font-weight:bold}
-
 /* ADMIN */
-.admin-panel{display:none;background:#fff;border-radius:10px;padding:30px;margin:40px auto;max-width:1000px}
+.admin-panel{display:none;background:#fff;border-radius:10px;padding:30px;margin:40px auto;max-width:1100px}
 .admin-panel h2{margin-bottom:20px}
+
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
 .form-group{display:flex;flex-direction:column;gap:6px}
 .form-group.full{grid-column:1/-1}
 .form-group input,.form-group textarea,.form-group select{padding:11px;border:1px solid #ccc;border-radius:5px}
 .form-group textarea{min-height:100px;resize:vertical}
+
 .add-product{margin-top:20px;padding:13px 25px;border:0;background:#ff6a00;color:white;border-radius:6px;font-weight:bold}
+.logout-btn{margin-top:20px;padding:13px 25px;border:0;background:#222;color:white;border-radius:6px;font-weight:bold;margin-left:8px}
+
 .admin-note{background:#fff5ed;padding:15px;border-radius:7px;color:#555;margin-bottom:20px;line-height:1.6}
+
+.admin-login{display:none;background:#fff;border-radius:10px;padding:30px;margin:40px auto;max-width:500px}
+.admin-login h2{margin-bottom:20px}
+.login-group{display:flex;flex-direction:column;gap:7px;margin-bottom:15px}
+.login-group input{padding:12px;border:1px solid #ccc;border-radius:6px}
+.login-btn{width:100%;padding:13px;border:0;background:#ff6a00;color:#fff;border-radius:6px;font-weight:bold}
+
+.admin-products{margin-top:30px}
+.admin-product-row{display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid #ddd;padding:15px 0}
+.admin-product-info{flex:1}
+.admin-product-info strong{display:block;margin-bottom:5px}
+.admin-product-info small{color:#777}
+.admin-actions{display:flex;gap:8px}
+.edit-btn,.delete-btn{padding:8px 13px;border-radius:5px;border:0}
+.edit-btn{background:#eee}
+.delete-btn{background:#d33;color:#fff}
 
 /* RESPONSIVE */
 @media(max-width:1100px){
 .categories{grid-template-columns:repeat(4,1fr)}
 .products{grid-template-columns:repeat(3,1fr)}
 }
+
 @media(max-width:800px){
 .top{flex-wrap:wrap}
 .search{order:3;flex-basis:100%}
@@ -124,6 +147,7 @@ footer p,footer button{display:block;color:#aaa;background:none;border:0;text-al
 .footer-grid{grid-template-columns:repeat(2,1fr)}
 .detail-grid{grid-template-columns:1fr}
 }
+
 @media(max-width:550px){
 .container{padding:0 15px}
 .hero{margin:15px;padding:25px}
@@ -135,7 +159,13 @@ footer p,footer button{display:block;color:#aaa;background:none;border:0;text-al
 .footer-grid{grid-template-columns:1fr}
 .form-grid{grid-template-columns:1fr}
 .form-group.full{grid-column:auto}
+.admin-product-row{flex-direction:column;align-items:flex-start}
 }
+
+/* STATUS */
+.status{margin-top:15px;padding:12px;border-radius:6px;display:none}
+.status.success{display:block;background:#e9f8ed;color:#24733a}
+.status.error{display:block;background:#ffecec;color:#a12626}
 </style>
 </head>
 
@@ -171,6 +201,7 @@ Shop<span>Nova</span>
 <button onclick="filterCategory('Fashion')">Fashion</button>
 <button onclick="filterCategory('Home')">Home</button>
 <button onclick="filterCategory('Beauty')">Beauty</button>
+<button onclick="filterCategory('Watches')">Watches</button>
 <button onclick="filterCategory('Sports')">Sports</button>
 <button onclick="filterCategory('Gaming')">Gaming</button>
 <button onclick="filterCategory('Toys')">Toys</button>
@@ -179,21 +210,17 @@ Shop<span>Nova</span>
 
 </header>
 
-
 <section class="hero">
 
 <div class="hero-content">
-
 <small>GLOBAL ONLINE SHOPPING</small>
-
 <h1>Discover Products From Around The World</h1>
-
 <p>
 Find interesting products from trusted marketplace partners
 and continue your purchase through the original marketplace.
 </p>
 
-<button class="hero-btn" onclick="document.getElementById('products').scrollIntoView()">
+<button class="hero-btn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
 Start Shopping
 </button>
 
@@ -208,9 +235,7 @@ Start Shopping
 
 </section>
 
-
 <div class="container">
-
 
 <section>
 
@@ -264,11 +289,9 @@ Start Shopping
 
 </section>
 
-
 <section id="products">
 
 <div class="toolbar">
-
 <div>
 <strong id="resultTitle">Featured Products</strong>
 </div>
@@ -279,14 +302,11 @@ Start Shopping
 <option value="high">Price: High to Low</option>
 <option value="name">Name A-Z</option>
 </select>
-
 </div>
-
 
 <div class="products" id="productGrid"></div>
 
 </section>
-
 
 <div class="features">
 
@@ -316,16 +336,39 @@ Start Shopping
 
 </div>
 
+<!-- ADMIN LOGIN -->
 
-<!-- ADMIN -->
+<section class="admin-login" id="adminLogin">
+
+<h2>🔐 Admin Login</h2>
+
+<div class="login-group">
+<label>Email</label>
+<input type="email" id="adminEmail" placeholder="Your admin email">
+</div>
+
+<div class="login-group">
+<label>Password</label>
+<input type="password" id="adminPassword" placeholder="Your password">
+</div>
+
+<button class="login-btn" onclick="adminLogin()">
+Login
+</button>
+
+<div id="loginStatus" class="status"></div>
+
+</section>
+
+<!-- ADMIN PANEL -->
 
 <section class="admin-panel" id="adminPanel">
 
-<h2>Product Manager</h2>
+<h2>🛠 Product Manager</h2>
 
 <div class="admin-note">
-Add your products here. For each product, paste its eligible Alibaba affiliate/deep link into the
-<strong>Affiliate Link</strong> field. The product will then appear automatically in your store.
+Only authenticated admin users can manage products.
+Products are stored securely in your Supabase database.
 </div>
 
 <div class="form-grid">
@@ -352,22 +395,27 @@ Add your products here. For each product, paste its eligible Alibaba affiliate/d
 
 <div class="form-group">
 <label>Price</label>
-<input id="pPrice" placeholder="19.99">
+<input id="pPrice" type="number" step="0.01" placeholder="19.99">
 </div>
 
 <div class="form-group">
 <label>Old Price</label>
-<input id="pOldPrice" placeholder="29.99">
+<input id="pOldPrice" type="number" step="0.01" placeholder="29.99">
 </div>
 
 <div class="form-group">
 <label>Rating</label>
-<input id="pRating" placeholder="4.8" value="5">
+<input id="pRating" type="number" step="0.1" value="5" min="0" max="5">
 </div>
 
 <div class="form-group">
 <label>Icon / Emoji</label>
 <input id="pIcon" placeholder="🎧" value="📦">
+</div>
+
+<div class="form-group full">
+<label>Product Image URL</label>
+<input id="pImage" placeholder="https://example.com/product-image.jpg">
 </div>
 
 <div class="form-group full">
@@ -382,19 +430,24 @@ Add your products here. For each product, paste its eligible Alibaba affiliate/d
 
 </div>
 
-<button class="add-product" onclick="addProduct()">
+<button class="add-product" id="saveProductBtn" onclick="saveProduct()">
 + Add Product
 </button>
 
-<button class="add-product" onclick="resetProducts()" style="margin-left:8px">
-Reset Demo Products
+<button class="logout-btn" onclick="adminLogout()">
+Logout
 </button>
+
+<div id="adminStatus" class="status"></div>
+
+<div class="admin-products">
+<h3>Existing Products</h3>
+<div id="adminProductList"></div>
+</div>
 
 </section>
 
-
 </div>
-
 
 <footer>
 
@@ -417,7 +470,7 @@ Reset Demo Products
 <h3>Customer</h3>
 <button onclick="showOrders()">My Orders</button>
 <button onclick="openCart()">Shopping Cart</button>
-<button onclick="showAdmin()">Product Manager</button>
+<button onclick="showAdmin()">Admin Login</button>
 </div>
 
 <div>
@@ -437,7 +490,6 @@ original marketplace.
 </div>
 
 </footer>
-
 
 <!-- PRODUCT MODAL -->
 
@@ -473,7 +525,6 @@ Buy Now
 
 </div>
 
-
 <!-- CART MODAL -->
 
 <div class="modal" id="cartModal">
@@ -496,7 +547,6 @@ Continue Shopping
 
 </div>
 
-
 <!-- ORDERS MODAL -->
 
 <div class="modal" id="ordersModal">
@@ -513,257 +563,112 @@ Continue Shopping
 
 </div>
 
-
 <script>
 
+/* =====================================================
+   SUPABASE CONFIGURATION
+   ===================================================== */
+
+const SUPABASE_URL =
+"https://jbdzxaxnsrlqubgnvbjt.supabase.co";
+
 /*
-========================================================
-SHOPNOVA SINGLE-FILE SHOPPING PLATFORM
-========================================================
+PASTE YOUR SUPABASE PUBLISHABLE KEY BELOW.
 
-IMPORTANT:
-
-You can add products from the built-in Admin panel.
-
-Each product has:
-
-affiliateLink:
-"YOUR_ALIBABA_AFFILIATE_LINK"
-
-Replace that value with your own eligible Alibaba
-affiliate/deep link.
-
-========================================================
+DO NOT PUT YOUR SECRET KEY HERE.
 */
 
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_8uKlDN2AXR6wcx742adnOA_ZIRiGSXT";
 
-/* DEFAULT PRODUCTS */
-
-var defaultProducts = [
-
-{
-id:1,
-name:"Wireless Bluetooth Earbuds",
-category:"Electronics",
-price:19.99,
-oldPrice:29.99,
-rating:4.8,
-icon:"🎧",
-description:"Wireless Bluetooth earbuds with a compact design and convenient everyday use.",
-affiliateLink:"https://offer.alibaba.com/cps/i4rukudg?bm=cps&src=saf&productId=1601394830766"
-},
-
-{
-id:2,
-name:"Smart Watch Fitness Tracker",
-category:"Watches",
-price:24.99,
-oldPrice:39.99,
-rating:4.7,
-icon:"⌚",
-description:"Modern smart watch for fitness tracking, notifications and everyday activities.",
-affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
-},
-
-{
-id:3,
-name:"Portable USB Blender",
-category:"Home",
-price:18.50,
-oldPrice:27.99,
-rating:4.6,
-icon:"🥤",
-description:"Portable rechargeable blender designed for smoothies and convenient travel use.",
-affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
-},
-
-{
-id:4,
-name:"Modern LED Desk Lamp",
-category:"Home",
-price:15.99,
-oldPrice:25.99,
-rating:4.8,
-icon:"💡",
-description:"Modern LED desk lamp suitable for office, study and home environments.",
-affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
-},
-
-{
-id:5,
-name:"Waterproof Travel Backpack",
-category:"Fashion",
-price:22.99,
-oldPrice:34.99,
-rating:4.7,
-icon:"🎒",
-description:"Practical waterproof travel backpack suitable for work, travel and everyday use.",
-affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
-},
-
-{
-id:6,
-name:"Professional Hair Dryer",
-category:"Beauty",
-price:21.99,
-oldPrice:32.99,
-rating:4.6,
-icon:"💇",
-description:"Professional-style hair dryer with modern design for everyday styling.",
-affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
-},
-
-{
-id:7,
-name:"Gaming Controller",
-category:"Gaming",
-price:28.99,
-oldPrice:45.99,
-rating:4.8,
-icon:"🎮",
-description:"Comfortable gaming controller designed for compatible gaming systems.",
-affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
-},
-
-{
-id:8,
-name:"Sports Water Bottle",
-category:"Sports",
-price:12.99,
-oldPrice:19.99,
-rating:4.7,
-icon:"🥤",
-description:"Reusable sports water bottle for gym, outdoor activities and everyday use.",
-affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
-},
-
-{
-id:9,
-name:"Cute Educational Toy",
-category:"Toys",
-price:16.99,
-oldPrice:24.99,
-rating:4.5,
-icon:"🧸",
-description:"Fun educational toy designed for learning and creative play.",
-affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
-},
-
-{
-id:10,
-name:"Classic Sunglasses",
-category:"Fashion",
-price:14.99,
-oldPrice:22.99,
-rating:4.6,
-icon:"🕶️",
-description:"Classic fashion sunglasses with a stylish everyday look.",
-affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
-}
-
-];
-
-
-/* LOAD PRODUCTS */
-
-var products = loadProducts();
-
-var currentProduct = null;
-
-var currentList = products.slice();
-
-var cart = loadCart();
-
-
-/* STORAGE */
-
-function loadProducts(){
-
-var saved = localStorage.getItem("shopnova_products");
-
-if(saved){
-
-try{
-
-return JSON.parse(saved);
-
-}catch(e){}
-
-}
-
-return defaultProducts.slice();
-
-}
-
-
-function saveProducts(){
-
-localStorage.setItem(
-"shopnova_products",
-JSON.stringify(products)
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_PUBLISHABLE_KEY
 );
 
-}
+
+/* =====================================================
+   GLOBAL VARIABLES
+   ===================================================== */
+
+let products = [];
+let currentList = [];
+let currentProduct = null;
+let editingProductId = null;
+
+let cart =
+JSON.parse(localStorage.getItem("shopnova_cart") || "[]");
 
 
-function loadCart(){
+/* =====================================================
+   LOAD PRODUCTS FROM SUPABASE
+   ===================================================== */
 
-var saved = localStorage.getItem("shopnova_cart");
+async function loadProducts(){
 
-if(saved){
+const {data,error} =
+await supabaseClient
+.from("products")
+.select("*")
+.order("created_at",{ascending:false});
 
-try{
+if(error){
 
-return JSON.parse(saved);
+console.error(error);
 
-}catch(e){}
-
-}
-
-return [];
-
-}
-
-
-function saveCart(){
-
-localStorage.setItem(
-"shopnova_cart",
-JSON.stringify(cart)
+showStatus(
+"adminStatus",
+"Could not load products. Check Supabase setup.",
+"error"
 );
 
+return;
+
 }
 
+products =
+(data || []).map(function(p){
 
-/* HOME */
+return {
 
-function goHome(){
+id:p.id,
+name:p.name || "",
+category:p.category || "Other",
+price:Number(p.price || 0),
+oldPrice:Number(p.old_price || p.price || 0),
+rating:Number(p.rating || 5),
+icon:p.icon || "📦",
+image_url:p.image_url || "",
+description:p.description || "",
+affiliateLink:p.affiliate_link || p.product_url || ""
 
-window.scrollTo({
-top:0,
-behavior:"smooth"
+};
+
 });
 
-currentList = products.slice();
-
-document.getElementById("resultTitle").innerText =
-"Featured Products";
+currentList =
+products.slice();
 
 renderProducts(currentList);
 
+renderAdminProducts();
+
 }
 
 
-/* RENDER PRODUCTS */
+/* =====================================================
+   RENDER PRODUCTS
+   ===================================================== */
 
 function renderProducts(list){
 
-var grid =
+const grid =
 document.getElementById("productGrid");
 
 grid.innerHTML = "";
 
-if(list.length === 0){
+if(!list.length){
 
 grid.innerHTML =
 '<div class="empty">No products found.</div>';
@@ -772,13 +677,19 @@ return;
 
 }
 
-for(var i=0;i<list.length;i++){
+list.forEach(function(p){
 
-var p = list[i];
-
-var card = document.createElement("div");
+const card =
+document.createElement("div");
 
 card.className = "product";
+
+let imageHTML =
+p.image_url
+?
+`<img src="${safeAttribute(p.image_url)}" alt="${safe(p.name)}">`
+:
+safe(p.icon);
 
 card.innerHTML = `
 
@@ -787,12 +698,11 @@ card.innerHTML = `
 <button
 class="wish"
 onclick="toggleWishlist(${p.id})"
-title="Wishlist"
->
+title="Wishlist">
 ♡
 </button>
 
-${safe(p.icon)}
+${imageHTML}
 
 </div>
 
@@ -801,7 +711,7 @@ ${safe(p.icon)}
 <h3>${safe(p.name)}</h3>
 
 <div class="rating">
-★★★★★ ${p.rating}
+★★★★★ ${Number(p.rating).toFixed(1)}
 </div>
 
 <div class="price">
@@ -816,15 +726,13 @@ $${Number(p.oldPrice).toFixed(2)}
 
 <button
 class="view-btn"
-onclick="viewProduct(${p.id})"
->
+onclick="viewProduct(${p.id})">
 View
 </button>
 
 <button
 class="buy-btn"
-onclick="buyProduct(${p.id})"
->
+onclick="buyProduct(${p.id})">
 Buy Now
 </button>
 
@@ -835,18 +743,496 @@ Buy Now
 
 grid.appendChild(card);
 
-}
+});
 
 updateCartCount();
 
 }
 
 
-/* SAFE TEXT */
+/* =====================================================
+   ADMIN PRODUCT LIST
+   ===================================================== */
+
+function renderAdminProducts(){
+
+const box =
+document.getElementById("adminProductList");
+
+if(!box) return;
+
+box.innerHTML = "";
+
+if(!products.length){
+
+box.innerHTML =
+"<p style='color:#777;margin-top:15px'>No products yet.</p>";
+
+return;
+
+}
+
+products.forEach(function(p){
+
+const row =
+document.createElement("div");
+
+row.className =
+"admin-product-row";
+
+row.innerHTML = `
+
+<div class="admin-product-info">
+
+<strong>${safe(p.name)}</strong>
+
+<small>
+${safe(p.category)}
+ • $${Number(p.price).toFixed(2)}
+</small>
+
+</div>
+
+<div class="admin-actions">
+
+<button
+class="edit-btn"
+onclick="editProduct(${p.id})">
+Edit
+</button>
+
+<button
+class="delete-btn"
+onclick="deleteProduct(${p.id})">
+Delete
+</button>
+
+</div>
+`;
+
+box.appendChild(row);
+
+});
+
+}
+
+
+/* =====================================================
+   ADMIN LOGIN
+   ===================================================== */
+
+async function adminLogin(){
+
+const email =
+document.getElementById("adminEmail").value.trim();
+
+const password =
+document.getElementById("adminPassword").value;
+
+if(!email || !password){
+
+showStatus(
+"loginStatus",
+"Enter your email and password.",
+"error"
+);
+
+return;
+
+}
+
+const {data,error} =
+await supabaseClient.auth.signInWithPassword({
+email:email,
+password:password
+});
+
+if(error){
+
+showStatus(
+"loginStatus",
+"Login failed: " + error.message,
+"error"
+);
+
+return;
+
+}
+
+showStatus(
+"loginStatus",
+"Login successful.",
+"success"
+);
+
+document.getElementById("adminPassword").value = "";
+
+showAdminPanel();
+
+}
+
+
+/* =====================================================
+   SHOW ADMIN
+   ===================================================== */
+
+async function showAdmin(){
+
+const {data} =
+await supabaseClient.auth.getSession();
+
+if(data.session){
+
+showAdminPanel();
+
+}else{
+
+document.getElementById("adminLogin").style.display =
+"block";
+
+document.getElementById("adminPanel").style.display =
+"none";
+
+document.getElementById("adminLogin").scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+}
+
+
+/* =====================================================
+   SHOW ADMIN PANEL
+   ===================================================== */
+
+function showAdminPanel(){
+
+document.getElementById("adminLogin").style.display =
+"none";
+
+document.getElementById("adminPanel").style.display =
+"block";
+
+document.getElementById("adminPanel").scrollIntoView({
+behavior:"smooth"
+});
+
+renderAdminProducts();
+
+}
+
+
+/* =====================================================
+   ADMIN LOGOUT
+   ===================================================== */
+
+async function adminLogout(){
+
+await supabaseClient.auth.signOut();
+
+document.getElementById("adminPanel").style.display =
+"none";
+
+document.getElementById("adminLogin").style.display =
+"block";
+
+showStatus(
+"loginStatus",
+"Logged out successfully.",
+"success"
+);
+
+}
+
+
+/* =====================================================
+   SAVE / UPDATE PRODUCT
+   ===================================================== */
+
+async function saveProduct(){
+
+const name =
+document.getElementById("pName").value.trim();
+
+const category =
+document.getElementById("pCategory").value;
+
+const price =
+parseFloat(document.getElementById("pPrice").value);
+
+const oldPrice =
+parseFloat(document.getElementById("pOldPrice").value);
+
+const rating =
+parseFloat(document.getElementById("pRating").value);
+
+const icon =
+document.getElementById("pIcon").value.trim();
+
+const image =
+document.getElementById("pImage").value.trim();
+
+const description =
+document.getElementById("pDescription").value.trim();
+
+const link =
+document.getElementById("pLink").value.trim();
+
+if(!name){
+
+showStatus(
+"adminStatus",
+"Enter product name.",
+"error"
+);
+
+return;
+
+}
+
+if(isNaN(price)){
+
+showStatus(
+"adminStatus",
+"Enter a valid price.",
+"error"
+);
+
+return;
+
+}
+
+if(!link){
+
+showStatus(
+"adminStatus",
+"Enter the affiliate link.",
+"error"
+);
+
+return;
+
+}
+
+
+/* CHECK LOGIN */
+
+const {data:sessionData} =
+await supabaseClient.auth.getSession();
+
+if(!sessionData.session){
+
+showStatus(
+"adminStatus",
+"Please login first.",
+"error"
+);
+
+return;
+
+}
+
+
+const productData = {
+
+name:name,
+category:category,
+price:price,
+old_price:isNaN(oldPrice) ? price : oldPrice,
+rating:isNaN(rating) ? 5 : rating,
+icon:icon || "📦",
+image_url:image,
+description:description || "Product description.",
+affiliate_link:link,
+product_url:link
+
+};
+
+
+let result;
+
+
+if(editingProductId){
+
+result =
+await supabaseClient
+.from("products")
+.update(productData)
+.eq("id",editingProductId);
+
+}else{
+
+result =
+await supabaseClient
+.from("products")
+.insert([productData]);
+
+}
+
+
+if(result.error){
+
+console.error(result.error);
+
+showStatus(
+"adminStatus",
+"Database error: " + result.error.message,
+"error"
+);
+
+return;
+
+}
+
+
+editingProductId = null;
+
+document.getElementById("saveProductBtn").innerText =
+"+ Add Product";
+
+clearProductForm();
+
+await loadProducts();
+
+showStatus(
+"adminStatus",
+editingProductId
+?
+"Product updated."
+:
+"Product saved successfully.",
+"success"
+);
+
+}
+
+
+/* =====================================================
+   EDIT PRODUCT
+   ===================================================== */
+
+function editProduct(id){
+
+const p =
+products.find(function(item){
+return String(item.id) === String(id);
+});
+
+if(!p) return;
+
+editingProductId = id;
+
+document.getElementById("pName").value =
+p.name;
+
+document.getElementById("pCategory").value =
+p.category;
+
+document.getElementById("pPrice").value =
+p.price;
+
+document.getElementById("pOldPrice").value =
+p.oldPrice;
+
+document.getElementById("pRating").value =
+p.rating;
+
+document.getElementById("pIcon").value =
+p.icon;
+
+document.getElementById("pImage").value =
+p.image_url;
+
+document.getElementById("pDescription").value =
+p.description;
+
+document.getElementById("pLink").value =
+p.affiliateLink;
+
+document.getElementById("saveProductBtn").innerText =
+"Update Product";
+
+document.getElementById("adminPanel").scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+
+/* =====================================================
+   DELETE PRODUCT
+   ===================================================== */
+
+async function deleteProduct(id){
+
+if(!confirm("Delete this product?")) return;
+
+const {data:sessionData} =
+await supabaseClient.auth.getSession();
+
+if(!sessionData.session){
+
+alert("Please login first.");
+
+return;
+
+}
+
+const {error} =
+await supabaseClient
+.from("products")
+.delete()
+.eq("id",id);
+
+if(error){
+
+showStatus(
+"adminStatus",
+"Delete failed: " + error.message,
+"error"
+);
+
+return;
+
+}
+
+await loadProducts();
+
+showStatus(
+"adminStatus",
+"Product deleted.",
+"success"
+);
+
+}
+
+
+/* =====================================================
+   CLEAR FORM
+   ===================================================== */
+
+function clearProductForm(){
+
+document.getElementById("pName").value="";
+document.getElementById("pPrice").value="";
+document.getElementById("pOldPrice").value="";
+document.getElementById("pRating").value="5";
+document.getElementById("pIcon").value="📦";
+document.getElementById("pImage").value="";
+document.getElementById("pDescription").value="";
+document.getElementById("pLink").value="";
+
+}
+
+
+/* =====================================================
+   SAFE HTML
+   ===================================================== */
 
 function safe(value){
 
-var div =
+const div =
 document.createElement("div");
 
 div.textContent =
@@ -857,19 +1243,32 @@ return div.innerHTML;
 }
 
 
-/* SEARCH */
+function safeAttribute(value){
+
+return String(value || "")
+.replace(/"/g,"&quot;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;");
+
+}
+
+
+/* =====================================================
+   SEARCH
+   ===================================================== */
 
 function searchProducts(){
 
-var query =
+const query =
 document.getElementById("searchInput")
 .value
 .toLowerCase()
 .trim();
 
-if(query === ""){
+if(!query){
 
-currentList = products.slice();
+currentList =
+products.slice();
 
 document.getElementById("resultTitle")
 .innerText =
@@ -913,15 +1312,15 @@ behavior:"smooth"
 function enterSearch(event){
 
 if(event.key === "Enter"){
-
 searchProducts();
-
 }
 
 }
 
 
-/* CATEGORY */
+/* =====================================================
+   CATEGORY
+   ===================================================== */
 
 function filterCategory(category){
 
@@ -934,15 +1333,11 @@ document.getElementById("resultTitle")
 .innerText =
 "All Products";
 
-}
-
-else{
+}else{
 
 currentList =
 products.filter(function(p){
-
 return p.category === category;
-
 });
 
 document.getElementById("resultTitle")
@@ -961,14 +1356,16 @@ behavior:"smooth"
 }
 
 
-/* SORT */
+/* =====================================================
+   SORT
+   ===================================================== */
 
 function sortProducts(){
 
-var type =
+const type =
 document.getElementById("sortSelect").value;
 
-var list =
+const list =
 currentList.slice();
 
 if(type === "low"){
@@ -990,9 +1387,7 @@ return Number(b.price)-Number(a.price);
 else if(type === "name"){
 
 list.sort(function(a,b){
-
 return a.name.localeCompare(b.name);
-
 });
 
 }
@@ -1002,22 +1397,35 @@ renderProducts(list);
 }
 
 
-/* VIEW PRODUCT */
+/* =====================================================
+   VIEW PRODUCT
+   ===================================================== */
 
 function viewProduct(id){
 
-var p =
+const p =
 products.find(function(item){
-return item.id === id;
+return String(item.id) === String(id);
 });
 
 if(!p) return;
 
 currentProduct = p;
 
-document.getElementById("detailImage")
-.innerHTML =
+const detailImage =
+document.getElementById("detailImage");
+
+if(p.image_url){
+
+detailImage.innerHTML =
+`<img src="${safeAttribute(p.image_url)}" alt="${safe(p.name)}">`;
+
+}else{
+
+detailImage.innerHTML =
 safe(p.icon);
+
+}
 
 document.getElementById("detailName")
 .innerText =
@@ -1025,7 +1433,7 @@ p.name;
 
 document.getElementById("detailRating")
 .innerText =
-"★★★★★ " + p.rating + " Rating";
+"★★★★★ " + Number(p.rating).toFixed(1) + " Rating";
 
 document.getElementById("detailPrice")
 .innerText =
@@ -1040,37 +1448,28 @@ openModal("productModal");
 }
 
 
-/* BUY PRODUCT */
+/* =====================================================
+   BUY PRODUCT
+   ===================================================== */
 
 function buyProduct(id){
 
-var p =
+const p =
 products.find(function(item){
-return item.id === id;
+return String(item.id) === String(id);
 });
 
 if(!p) return;
 
 currentProduct = p;
 
-if(!p.affiliateLink ||
-p.affiliateLink.indexOf("PASTE_") === 0){
+if(!p.affiliateLink){
 
-alert(
-"Affiliate link is not connected for this product. Open Admin and add the Alibaba affiliate link."
-);
+alert("Affiliate link is not available.");
 
 return;
 
 }
-
-
-/*
-Open the marketplace affiliate link.
-
-The buyer completes the actual purchase
-on the marketplace.
-*/
 
 window.open(
 p.affiliateLink,
@@ -1078,34 +1477,21 @@ p.affiliateLink,
 "noopener,noreferrer"
 );
 
-
-/* SAVE CLICK */
-
-var clicks =
-Number(localStorage.getItem("shopnova_clicks") || 0);
-
-localStorage.setItem(
-"shopnova_clicks",
-clicks + 1
-);
-
 }
 
-
-/* DETAIL BUY */
 
 function buyCurrentProduct(){
 
 if(currentProduct){
-
 buyProduct(currentProduct.id);
-
 }
 
 }
 
 
-/* MODALS */
+/* =====================================================
+   MODALS
+   ===================================================== */
 
 function openModal(id){
 
@@ -1125,13 +1511,15 @@ document.getElementById(id)
 }
 
 
-/* CART */
+/* =====================================================
+   CART
+   ===================================================== */
 
 function addToCart(id){
 
-var p =
+const p =
 products.find(function(item){
-return item.id === id;
+return String(item.id) === String(id);
 });
 
 if(!p) return;
@@ -1143,7 +1531,10 @@ price:p.price,
 icon:p.icon
 });
 
-saveCart();
+localStorage.setItem(
+"shopnova_cart",
+JSON.stringify(cart)
+);
 
 updateCartCount();
 
@@ -1163,7 +1554,7 @@ cart.length;
 
 function openCart(){
 
-var list =
+const list =
 document.getElementById("cartList");
 
 list.innerHTML = "";
@@ -1182,15 +1573,13 @@ return;
 
 }
 
-var total = 0;
+let total = 0;
 
-for(var i=0;i<cart.length;i++){
-
-var item = cart[i];
+cart.forEach(function(item,index){
 
 total += Number(item.price);
 
-var div =
+const div =
 document.createElement("div");
 
 div.className =
@@ -1206,8 +1595,7 @@ $${Number(item.price).toFixed(2)}
 
 <button
 class="remove"
-onclick="removeCart(${i})"
->
+onclick="removeCart(${index})">
 Remove
 </button>
 
@@ -1215,7 +1603,7 @@ Remove
 
 list.appendChild(div);
 
-}
+});
 
 document.getElementById("cartTotal")
 .innerText =
@@ -1230,11 +1618,14 @@ function removeCart(index){
 
 cart.splice(index,1);
 
-saveCart();
-
-openCart();
+localStorage.setItem(
+"shopnova_cart",
+JSON.stringify(cart)
+);
 
 updateCartCount();
+
+openCart();
 
 }
 
@@ -1242,31 +1633,28 @@ updateCartCount();
 function checkoutCart(){
 
 alert(
-"Checkout is completed on the marketplace through the product's affiliate Buy Now link. Your cart is only a convenience feature in this single-file version."
+"Checkout is completed on the marketplace through the product's affiliate Buy Now link."
 );
 
 }
 
 
-/* WISHLIST */
+/* =====================================================
+   WISHLIST
+   ===================================================== */
 
 function toggleWishlist(id){
 
-var key =
+const key =
 "shopnova_wishlist_" + id;
 
-var exists =
-localStorage.getItem(key);
-
-if(exists){
+if(localStorage.getItem(key)){
 
 localStorage.removeItem(key);
 
 alert("Removed from wishlist.");
 
-}
-
-else{
+}else{
 
 localStorage.setItem(key,"1");
 
@@ -1277,189 +1665,30 @@ alert("Added to wishlist.");
 }
 
 
-/* ADMIN */
-
-function showAdmin(){
-
-var panel =
-document.getElementById("adminPanel");
-
-panel.style.display =
-panel.style.display === "block"
-? "none"
-: "block";
-
-panel.scrollIntoView({
-behavior:"smooth"
-});
-
-}
-
-
-function addProduct(){
-
-var name =
-document.getElementById("pName").value.trim();
-
-var category =
-document.getElementById("pCategory").value;
-
-var price =
-parseFloat(
-document.getElementById("pPrice").value
-);
-
-var oldPrice =
-parseFloat(
-document.getElementById("pOldPrice").value
-);
-
-var rating =
-parseFloat(
-document.getElementById("pRating").value
-);
-
-var icon =
-document.getElementById("pIcon").value.trim();
-
-var description =
-document.getElementById("pDescription").value.trim();
-
-var link =
-document.getElementById("pLink").value.trim();
-
-
-if(!name){
-
-alert("Enter product name.");
-
-return;
-
-}
-
-if(isNaN(price)){
-
-alert("Enter a valid price.");
-
-return;
-
-}
-
-if(!link){
-
-alert("Paste the Alibaba affiliate link.");
-
-return;
-
-}
-
-
-var newProduct = {
-
-id:Date.now(),
-
-name:name,
-
-category:category,
-
-price:price,
-
-oldPrice:
-isNaN(oldPrice)
-? price
-: oldPrice,
-
-rating:
-isNaN(rating)
-? 5
-: rating,
-
-icon:
-icon || "📦",
-
-description:
-description || "Product description.",
-
-affiliateLink:link
-
-};
-
-
-products.push(newProduct);
-
-saveProducts();
-
-currentList =
-products.slice();
-
-renderProducts(currentList);
-
-
-document.getElementById("pName").value="";
-document.getElementById("pPrice").value="";
-document.getElementById("pOldPrice").value="";
-document.getElementById("pRating").value="5";
-document.getElementById("pIcon").value="📦";
-document.getElementById("pDescription").value="";
-document.getElementById("pLink").value="";
-
-
-alert(
-"Product added successfully!"
-);
-
-}
-
-
-function resetProducts(){
-
-if(!confirm(
-"Reset products to the original demo catalog?"
-)){
-
-return;
-
-}
-
-products =
-defaultProducts.slice();
-
-saveProducts();
-
-currentList =
-products.slice();
-
-renderProducts(currentList);
-
-alert("Demo products restored.");
-
-}
-
-
-/* ORDERS */
+/* =====================================================
+   ORDERS
+   ===================================================== */
 
 function showOrders(){
 
-var orders =
+const orders =
 JSON.parse(
 localStorage.getItem("shopnova_orders") || "[]"
 );
 
-var box =
+const box =
 document.getElementById("ordersContent");
 
-if(orders.length === 0){
+if(!orders.length){
 
 box.innerHTML =
-"<p style='color:#777;margin-top:15px'>No local orders yet. Purchases are completed on the marketplace.</p>";
+"<p style='color:#777;margin-top:15px'>No local orders yet.</p>";
 
-}
-
-else{
+}else{
 
 box.innerHTML = "";
 
-for(var i=0;i<orders.length;i++){
+orders.forEach(function(order){
 
 box.innerHTML += `
 
@@ -1468,23 +1697,21 @@ padding:15px 0;
 border-bottom:1px solid #ddd;
 ">
 
-<strong>
-${safe(orders[i].name)}
-</strong>
+<strong>${safe(order.name)}</strong>
 
 <p>
-Price: $${Number(orders[i].price).toFixed(2)}
+Price: $${Number(order.price).toFixed(2)}
 </p>
 
 <p>
-Status: ${safe(orders[i].status)}
+Status: ${safe(order.status)}
 </p>
 
 </div>
 
 `;
 
-}
+});
 
 }
 
@@ -1493,36 +1720,120 @@ openModal("ordersModal");
 }
 
 
-/* CLOSE MODAL WHEN CLICKING OUTSIDE */
+/* =====================================================
+   STATUS MESSAGE
+   ===================================================== */
+
+function showStatus(id,message,type){
+
+const box =
+document.getElementById(id);
+
+if(!box) return;
+
+box.className =
+"status " + type;
+
+box.innerText =
+message;
+
+}
+
+
+/* =====================================================
+   HOME
+   ===================================================== */
+
+function goHome(){
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+currentList =
+products.slice();
+
+document.getElementById("resultTitle")
+.innerText =
+"Featured Products";
+
+renderProducts(currentList);
+
+}
+
+
+/* =====================================================
+   CLOSE MODALS
+   ===================================================== */
 
 window.addEventListener(
 "click",
 function(event){
 
-var modals =
+const modals =
 document.querySelectorAll(".modal");
 
-for(var i=0;i<modals.length;i++){
+modals.forEach(function(modal){
 
-if(event.target === modals[i]){
+if(event.target === modal){
+modal.style.display = "none";
+}
 
-modals[i].style.display =
-"none";
+});
+
+});
+
+
+/* =====================================================
+   INITIALIZE
+   ===================================================== */
+
+async function init(){
+
+const {data} =
+await supabaseClient.auth.getSession();
+
+if(data.session){
+
+/*
+Keep admin hidden until Admin button is clicked.
+*/
 
 }
+
+await loadProducts();
+
+updateCartCount();
+
+}
+
+
+/* AUTH STATE */
+
+supabaseClient.auth.onAuthStateChange(
+function(event,session){
+
+if(event === "SIGNED_IN"){
+
+console.log("Admin signed in.");
+
+}
+
+if(event === "SIGNED_OUT"){
+
+document.getElementById("adminPanel").style.display =
+"none";
 
 }
 
 });
 
 
-/* START */
-
-renderProducts(products);
-
-updateCartCount();
+init();
 
 </script>
 
 </body>
 </html>
+```
