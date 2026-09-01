@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopNova - Global Shopping</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#f5f5f5;color:#222}
+button,input,select{font:inherit}
+button{cursor:pointer}
+
+header{background:#fff;position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.top{max-width:1400px;margin:auto;min-height:72px;padding:12px 25px;display:flex;align-items:center;gap:25px}
+.logo{font-size:29px;font-weight:800;color:#222;white-space:nowrap;cursor:pointer}
+.logo span{color:#ff6a00}
+.search{display:flex;flex:1;max-width:700px}
+.search input{width:100%;height:44px;border:2px solid #ff6a00;border-right:0;padding:0 15px;outline:none;border-radius:6px 0 0 6px}
+.search button{width:95px;border:0;background:#ff6a00;color:white;border-radius:0 6px 6px 0;font-weight:bold}
+.header-actions{display:flex;gap:15px;align-items:center}
+.header-actions button{background:none;border:0;font-size:14px}
+.cart-btn{font-size:22px!important}
+.cart-count{background:#ff6a00;color:white;border-radius:50%;font-size:11px;padding:3px 6px;vertical-align:top}
+
+.nav{border-top:1px solid #eee}
+.nav-inner{max-width:1400px;margin:auto;padding:0 25px;height:44px;display:flex;align-items:center;gap:28px;overflow-x:auto}
+.nav button{background:none;border:0;white-space:nowrap;color:#333}
+.nav button:hover{color:#ff6a00}
+
+.hero{max-width:1400px;margin:25px auto;padding:55px;min-height:330px;border-radius:12px;background:linear-gradient(135deg,#fff0e5,#fff9f4);display:flex;align-items:center;justify-content:space-between}
+.hero-content{max-width:650px}
+.hero small{color:#ff6a00;font-weight:bold}
+.hero h1{font-size:48px;line-height:1.08;margin:15px 0}
+.hero p{font-size:18px;color:#666;line-height:1.6}
+.hero-btn{margin-top:22px;border:0;background:#ff6a00;color:#fff;padding:14px 27px;border-radius:6px;font-weight:bold}
+.hero-art{width:350px;height:220px;background:#fff;border-radius:15px;display:flex;align-items:center;justify-content:center;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,.08)}
+.hero-art strong{font-size:34px;color:#ff6a00}
+
+.container{max-width:1400px;margin:40px auto;padding:0 25px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.section-head h2{font-size:25px}
+
+.categories{display:grid;grid-template-columns:repeat(8,1fr);gap:14px}
+.category{background:#fff;border:1px solid #ddd;border-radius:9px;padding:20px 8px;text-align:center;transition:.2s}
+.category:hover{border-color:#ff6a00;transform:translateY(-2px)}
+.category-icon{font-size:31px;margin-bottom:9px}
+.category-name{font-size:13px;font-weight:bold}
+
+.toolbar{background:#fff;padding:18px;border-radius:9px;margin:40px 0 20px;display:flex;justify-content:space-between;gap:15px;align-items:center}
+.toolbar select{padding:10px;border:1px solid #ccc;border-radius:6px;background:#fff}
+
+.products{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.product{background:#fff;border:1px solid #ddd;border-radius:9px;overflow:hidden;transition:.2s}
+.product:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.08)}
+.product-image{height:190px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:75px;position:relative}
+.wish{position:absolute;right:10px;top:10px;border:0;background:#fff;width:36px;height:36px;border-radius:50%;font-size:20px}
+.product-info{padding:15px}
+.product-info h3{font-size:15px;line-height:1.4;height:43px;overflow:hidden}
+.rating{color:#f5a000;font-size:13px;margin-top:8px}
+.price{color:#ff6a00;font-size:21px;font-weight:bold;margin-top:10px}
+.old{color:#999;text-decoration:line-through;font-size:12px;margin-top:4px}
+.product-actions{display:flex;gap:8px;margin-top:13px}
+.view-btn,.buy-btn{flex:1;padding:10px;border-radius:5px;font-weight:bold}
+.view-btn{border:1px solid #ff6a00;background:#fff;color:#ff6a00}
+.buy-btn{border:0;background:#ff6a00;color:#fff}
+
+.empty{background:#fff;padding:45px;text-align:center;border-radius:9px;color:#777;grid-column:1/-1}
+
+.features{margin-top:50px;background:#fff;border-radius:10px;padding:30px;display:grid;grid-template-columns:repeat(4,1fr);gap:25px}
+.feature{text-align:center}
+.feature-icon{font-size:35px}
+.feature h3{margin:10px 0;font-size:16px}
+.feature p{font-size:13px;color:#777;line-height:1.5}
+
+footer{margin-top:60px;background:#222;color:#fff;padding:45px 25px}
+.footer-grid{max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+footer h3{color:#ff6a00;margin-bottom:12px}
+footer p,footer button{display:block;color:#aaa;background:none;border:0;text-align:left;line-height:2}
+.disclosure{margin-top:35px;border-top:1px solid #444;padding-top:20px;color:#999;font-size:12px;line-height:1.6}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:3000;align-items:center;justify-content:center;padding:20px}
+.modal-box{background:#fff;width:100%;max-width:850px;max-height:90vh;overflow:auto;border-radius:12px;padding:30px;position:relative}
+.close{position:absolute;right:18px;top:15px;border:0;background:none;font-size:28px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.detail-image{height:350px;background:#f1f1f1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:110px}
+.detail h2{font-size:28px;margin-bottom:12px}
+.detail-rating{color:#f5a000;margin:10px 0}
+.detail-price{font-size:32px;color:#ff6a00;font-weight:bold;margin:20px 0}
+.detail-description{color:#666;line-height:1.7;margin-bottom:20px}
+.detail-buy{width:100%;padding:15px;border:0;background:#ff6a00;color:white;border-radius:6px;font-weight:bold}
+
+/* CART */
+.cart-list{margin-top:20px}
+.cart-item{display:flex;justify-content:space-between;gap:15px;padding:15px 0;border-bottom:1px solid #ddd}
+.remove{border:0;background:#eee;padding:7px 10px;border-radius:5px}
+.cart-total{text-align:right;font-size:22px;font-weight:bold;margin:20px 0}
+.checkout{width:100%;padding:14px;background:#ff6a00;color:white;border:0;border-radius:6px;font-weight:bold}
+
+/* ADMIN */
+.admin-panel{display:none;background:#fff;border-radius:10px;padding:30px;margin:40px auto;max-width:1000px}
+.admin-panel h2{margin-bottom:20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+.form-group input,.form-group textarea,.form-group select{padding:11px;border:1px solid #ccc;border-radius:5px}
+.form-group textarea{min-height:100px;resize:vertical}
+.add-product{margin-top:20px;padding:13px 25px;border:0;background:#ff6a00;color:white;border-radius:6px;font-weight:bold}
+.admin-note{background:#fff5ed;padding:15px;border-radius:7px;color:#555;margin-bottom:20px;line-height:1.6}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+.categories{grid-template-columns:repeat(4,1fr)}
+.products{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:800px){
+.top{flex-wrap:wrap}
+.search{order:3;flex-basis:100%}
+.hero{padding:35px}
+.hero h1{font-size:36px}
+.hero-art{display:none}
+.features{grid-template-columns:repeat(2,1fr)}
+.footer-grid{grid-template-columns:repeat(2,1fr)}
+.detail-grid{grid-template-columns:1fr}
+}
+@media(max-width:550px){
+.container{padding:0 15px}
+.hero{margin:15px;padding:25px}
+.hero h1{font-size:30px}
+.products{grid-template-columns:1fr 1fr;gap:10px}
+.categories{grid-template-columns:repeat(2,1fr)}
+.product-image{height:140px;font-size:55px}
+.features{grid-template-columns:1fr}
+.footer-grid{grid-template-columns:1fr}
+.form-grid{grid-template-columns:1fr}
+.form-group.full{grid-column:auto}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="top">
+
+<div class="logo" onclick="goHome()">
+Shop<span>Nova</span>
+</div>
+
+<div class="search">
+<input id="searchInput" placeholder="Search products..." onkeydown="enterSearch(event)">
+<button onclick="searchProducts()">Search</button>
+</div>
+
+<div class="header-actions">
+<button onclick="showAdmin()">Admin</button>
+<button onclick="showOrders()">Orders</button>
+<button class="cart-btn" onclick="openCart()">
+🛒 <span class="cart-count" id="cartCount">0</span>
+</button>
+</div>
+
+</div>
+
+<div class="nav">
+<div class="nav-inner">
+<button onclick="filterCategory('All')">All Categories</button>
+<button onclick="filterCategory('Electronics')">Electronics</button>
+<button onclick="filterCategory('Fashion')">Fashion</button>
+<button onclick="filterCategory('Home')">Home</button>
+<button onclick="filterCategory('Beauty')">Beauty</button>
+<button onclick="filterCategory('Sports')">Sports</button>
+<button onclick="filterCategory('Gaming')">Gaming</button>
+<button onclick="filterCategory('Toys')">Toys</button>
+</div>
+</div>
+
+</header>
+
+
+<section class="hero">
+
+<div class="hero-content">
+
+<small>GLOBAL ONLINE SHOPPING</small>
+
+<h1>Discover Products From Around The World</h1>
+
+<p>
+Find interesting products from trusted marketplace partners
+and continue your purchase through the original marketplace.
+</p>
+
+<button class="hero-btn" onclick="document.getElementById('products').scrollIntoView()">
+Start Shopping
+</button>
+
+</div>
+
+<div class="hero-art">
+<div>
+<strong>SHOPNOVA</strong>
+<p>Smart Shopping</p>
+</div>
+</div>
+
+</section>
+
+
+<div class="container">
+
+
+<section>
+
+<div class="section-head">
+<h2>Shop By Category</h2>
+</div>
+
+<div class="categories">
+
+<div class="category" onclick="filterCategory('Electronics')">
+<div class="category-icon">📱</div>
+<div class="category-name">Electronics</div>
+</div>
+
+<div class="category" onclick="filterCategory('Fashion')">
+<div class="category-icon">👕</div>
+<div class="category-name">Fashion</div>
+</div>
+
+<div class="category" onclick="filterCategory('Home')">
+<div class="category-icon">🏠</div>
+<div class="category-name">Home</div>
+</div>
+
+<div class="category" onclick="filterCategory('Beauty')">
+<div class="category-icon">💄</div>
+<div class="category-name">Beauty</div>
+</div>
+
+<div class="category" onclick="filterCategory('Watches')">
+<div class="category-icon">⌚</div>
+<div class="category-name">Watches</div>
+</div>
+
+<div class="category" onclick="filterCategory('Sports')">
+<div class="category-icon">🏋️</div>
+<div class="category-name">Sports</div>
+</div>
+
+<div class="category" onclick="filterCategory('Gaming')">
+<div class="category-icon">🎮</div>
+<div class="category-name">Gaming</div>
+</div>
+
+<div class="category" onclick="filterCategory('Toys')">
+<div class="category-icon">🧸</div>
+<div class="category-name">Toys</div>
+</div>
+
+</div>
+
+</section>
+
+
+<section id="products">
+
+<div class="toolbar">
+
+<div>
+<strong id="resultTitle">Featured Products</strong>
+</div>
+
+<select id="sortSelect" onchange="sortProducts()">
+<option value="default">Sort Products</option>
+<option value="low">Price: Low to High</option>
+<option value="high">Price: High to Low</option>
+<option value="name">Name A-Z</option>
+</select>
+
+</div>
+
+
+<div class="products" id="productGrid"></div>
+
+</section>
+
+
+<div class="features">
+
+<div class="feature">
+<div class="feature-icon">🌎</div>
+<h3>Global Products</h3>
+<p>Discover products from marketplace partners.</p>
+</div>
+
+<div class="feature">
+<div class="feature-icon">🔗</div>
+<h3>Marketplace Checkout</h3>
+<p>Buy buttons can send shoppers to the original marketplace.</p>
+</div>
+
+<div class="feature">
+<div class="feature-icon">🔒</div>
+<h3>Secure Checkout</h3>
+<p>Payment is completed on the marketplace website.</p>
+</div>
+
+<div class="feature">
+<div class="feature-icon">📱</div>
+<h3>Mobile Friendly</h3>
+<p>Designed for desktop, tablet and mobile users.</p>
+</div>
+
+</div>
+
+
+<!-- ADMIN -->
+
+<section class="admin-panel" id="adminPanel">
+
+<h2>Product Manager</h2>
+
+<div class="admin-note">
+Add your products here. For each product, paste its eligible Alibaba affiliate/deep link into the
+<strong>Affiliate Link</strong> field. The product will then appear automatically in your store.
+</div>
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Product Name</label>
+<input id="pName" placeholder="Example: Wireless Earbuds">
+</div>
+
+<div class="form-group">
+<label>Category</label>
+<select id="pCategory">
+<option>Electronics</option>
+<option>Fashion</option>
+<option>Home</option>
+<option>Beauty</option>
+<option>Watches</option>
+<option>Sports</option>
+<option>Gaming</option>
+<option>Toys</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Price</label>
+<input id="pPrice" placeholder="19.99">
+</div>
+
+<div class="form-group">
+<label>Old Price</label>
+<input id="pOldPrice" placeholder="29.99">
+</div>
+
+<div class="form-group">
+<label>Rating</label>
+<input id="pRating" placeholder="4.8" value="5">
+</div>
+
+<div class="form-group">
+<label>Icon / Emoji</label>
+<input id="pIcon" placeholder="🎧" value="📦">
+</div>
+
+<div class="form-group full">
+<label>Product Description</label>
+<textarea id="pDescription" placeholder="Write product description..."></textarea>
+</div>
+
+<div class="form-group full">
+<label>Alibaba Affiliate Link</label>
+<input id="pLink" placeholder="https://offer.alibaba.com/...">
+</div>
+
+</div>
+
+<button class="add-product" onclick="addProduct()">
++ Add Product
+</button>
+
+<button class="add-product" onclick="resetProducts()" style="margin-left:8px">
+Reset Demo Products
+</button>
+
+</section>
+
+
+</div>
+
+
+<footer>
+
+<div class="footer-grid">
+
+<div>
+<h3>ShopNova</h3>
+<p>Global online shopping discovery platform.</p>
+</div>
+
+<div>
+<h3>Categories</h3>
+<button onclick="filterCategory('Electronics')">Electronics</button>
+<button onclick="filterCategory('Fashion')">Fashion</button>
+<button onclick="filterCategory('Home')">Home</button>
+<button onclick="filterCategory('Beauty')">Beauty</button>
+</div>
+
+<div>
+<h3>Customer</h3>
+<button onclick="showOrders()">My Orders</button>
+<button onclick="openCart()">Shopping Cart</button>
+<button onclick="showAdmin()">Product Manager</button>
+</div>
+
+<div>
+<h3>Information</h3>
+<p>About Us</p>
+<p>Privacy Policy</p>
+<p>Terms</p>
+<p>Affiliate Disclosure</p>
+</div>
+
+</div>
+
+<div class="disclosure">
+Affiliate Disclosure: ShopNova may earn a commission from qualifying purchases made through
+affiliate links. Product prices, availability and marketplace terms are determined by the
+original marketplace.
+</div>
+
+</footer>
+
+
+<!-- PRODUCT MODAL -->
+
+<div class="modal" id="productModal">
+
+<div class="modal-box">
+
+<button class="close" onclick="closeModal('productModal')">×</button>
+
+<div class="detail-grid">
+
+<div class="detail-image" id="detailImage">📦</div>
+
+<div class="detail">
+
+<h2 id="detailName"></h2>
+
+<div class="detail-rating" id="detailRating"></div>
+
+<div class="detail-price" id="detailPrice"></div>
+
+<p class="detail-description" id="detailDescription"></p>
+
+<button class="detail-buy" onclick="buyCurrentProduct()">
+Buy Now
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- CART MODAL -->
+
+<div class="modal" id="cartModal">
+
+<div class="modal-box">
+
+<button class="close" onclick="closeModal('cartModal')">×</button>
+
+<h2>Shopping Cart</h2>
+
+<div class="cart-list" id="cartList"></div>
+
+<div class="cart-total" id="cartTotal"></div>
+
+<button class="checkout" onclick="checkoutCart()">
+Continue Shopping
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ORDERS MODAL -->
+
+<div class="modal" id="ordersModal">
+
+<div class="modal-box">
+
+<button class="close" onclick="closeModal('ordersModal')">×</button>
+
+<h2>My Orders</h2>
+
+<div id="ordersContent" style="margin-top:20px"></div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/*
+========================================================
+SHOPNOVA SINGLE-FILE SHOPPING PLATFORM
+========================================================
+
+IMPORTANT:
+
+You can add products from the built-in Admin panel.
+
+Each product has:
+
+affiliateLink:
+"YOUR_ALIBABA_AFFILIATE_LINK"
+
+Replace that value with your own eligible Alibaba
+affiliate/deep link.
+
+========================================================
+*/
+
+
+/* DEFAULT PRODUCTS */
+
+var defaultProducts = [
+
+{
+id:1,
+name:"Wireless Bluetooth Earbuds",
+category:"Electronics",
+price:19.99,
+oldPrice:29.99,
+rating:4.8,
+icon:"🎧",
+description:"Wireless Bluetooth earbuds with a compact design and convenient everyday use.",
+affiliateLink:"https://offer.alibaba.com/cps/i4rukudg?bm=cps&src=saf&productId=1601394830766"
+},
+
+{
+id:2,
+name:"Smart Watch Fitness Tracker",
+category:"Watches",
+price:24.99,
+oldPrice:39.99,
+rating:4.7,
+icon:"⌚",
+description:"Modern smart watch for fitness tracking, notifications and everyday activities.",
+affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
+},
+
+{
+id:3,
+name:"Portable USB Blender",
+category:"Home",
+price:18.50,
+oldPrice:27.99,
+rating:4.6,
+icon:"🥤",
+description:"Portable rechargeable blender designed for smoothies and convenient travel use.",
+affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
+},
+
+{
+id:4,
+name:"Modern LED Desk Lamp",
+category:"Home",
+price:15.99,
+oldPrice:25.99,
+rating:4.8,
+icon:"💡",
+description:"Modern LED desk lamp suitable for office, study and home environments.",
+affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
+},
+
+{
+id:5,
+name:"Waterproof Travel Backpack",
+category:"Fashion",
+price:22.99,
+oldPrice:34.99,
+rating:4.7,
+icon:"🎒",
+description:"Practical waterproof travel backpack suitable for work, travel and everyday use.",
+affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
+},
+
+{
+id:6,
+name:"Professional Hair Dryer",
+category:"Beauty",
+price:21.99,
+oldPrice:32.99,
+rating:4.6,
+icon:"💇",
+description:"Professional-style hair dryer with modern design for everyday styling.",
+affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
+},
+
+{
+id:7,
+name:"Gaming Controller",
+category:"Gaming",
+price:28.99,
+oldPrice:45.99,
+rating:4.8,
+icon:"🎮",
+description:"Comfortable gaming controller designed for compatible gaming systems.",
+affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
+},
+
+{
+id:8,
+name:"Sports Water Bottle",
+category:"Sports",
+price:12.99,
+oldPrice:19.99,
+rating:4.7,
+icon:"🥤",
+description:"Reusable sports water bottle for gym, outdoor activities and everyday use.",
+affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
+},
+
+{
+id:9,
+name:"Cute Educational Toy",
+category:"Toys",
+price:16.99,
+oldPrice:24.99,
+rating:4.5,
+icon:"🧸",
+description:"Fun educational toy designed for learning and creative play.",
+affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
+},
+
+{
+id:10,
+name:"Classic Sunglasses",
+category:"Fashion",
+price:14.99,
+oldPrice:22.99,
+rating:4.6,
+icon:"🕶️",
+description:"Classic fashion sunglasses with a stylish everyday look.",
+affiliateLink:"PASTE_ALIBABA_AFFILIATE_LINK_HERE"
+}
+
+];
+
+
+/* LOAD PRODUCTS */
+
+var products = loadProducts();
+
+var currentProduct = null;
+
+var currentList = products.slice();
+
+var cart = loadCart();
+
+
+/* STORAGE */
+
+function loadProducts(){
+
+var saved = localStorage.getItem("shopnova_products");
+
+if(saved){
+
+try{
+
+return JSON.parse(saved);
+
+}catch(e){}
+
+}
+
+return defaultProducts.slice();
+
+}
+
+
+function saveProducts(){
+
+localStorage.setItem(
+"shopnova_products",
+JSON.stringify(products)
+);
+
+}
+
+
+function loadCart(){
+
+var saved = localStorage.getItem("shopnova_cart");
+
+if(saved){
+
+try{
+
+return JSON.parse(saved);
+
+}catch(e){}
+
+}
+
+return [];
+
+}
+
+
+function saveCart(){
+
+localStorage.setItem(
+"shopnova_cart",
+JSON.stringify(cart)
+);
+
+}
+
+
+/* HOME */
+
+function goHome(){
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+currentList = products.slice();
+
+document.getElementById("resultTitle").innerText =
+"Featured Products";
+
+renderProducts(currentList);
+
+}
+
+
+/* RENDER PRODUCTS */
+
+function renderProducts(list){
+
+var grid =
+document.getElementById("productGrid");
+
+grid.innerHTML = "";
+
+if(list.length === 0){
+
+grid.innerHTML =
+'<div class="empty">No products found.</div>';
+
+return;
+
+}
+
+for(var i=0;i<list.length;i++){
+
+var p = list[i];
+
+var card = document.createElement("div");
+
+card.className = "product";
+
+card.innerHTML = `
+
+<div class="product-image">
+
+<button
+class="wish"
+onclick="toggleWishlist(${p.id})"
+title="Wishlist"
+>
+♡
+</button>
+
+${safe(p.icon)}
+
+</div>
+
+<div class="product-info">
+
+<h3>${safe(p.name)}</h3>
+
+<div class="rating">
+★★★★★ ${p.rating}
+</div>
+
+<div class="price">
+$${Number(p.price).toFixed(2)}
+</div>
+
+<div class="old">
+$${Number(p.oldPrice).toFixed(2)}
+</div>
+
+<div class="product-actions">
+
+<button
+class="view-btn"
+onclick="viewProduct(${p.id})"
+>
+View
+</button>
+
+<button
+class="buy-btn"
+onclick="buyProduct(${p.id})"
+>
+Buy Now
+</button>
+
+</div>
+
+</div>
+`;
+
+grid.appendChild(card);
+
+}
+
+updateCartCount();
+
+}
+
+
+/* SAFE TEXT */
+
+function safe(value){
+
+var div =
+document.createElement("div");
+
+div.textContent =
+value == null ? "" : value;
+
+return div.innerHTML;
+
+}
+
+
+/* SEARCH */
+
+function searchProducts(){
+
+var query =
+document.getElementById("searchInput")
+.value
+.toLowerCase()
+.trim();
+
+if(query === ""){
+
+currentList = products.slice();
+
+document.getElementById("resultTitle")
+.innerText =
+"Featured Products";
+
+renderProducts(currentList);
+
+return;
+
+}
+
+currentList =
+products.filter(function(p){
+
+return (
+
+p.name.toLowerCase().includes(query) ||
+
+p.category.toLowerCase().includes(query) ||
+
+p.description.toLowerCase().includes(query)
+
+);
+
+});
+
+document.getElementById("resultTitle")
+.innerText =
+"Search Results: " + query;
+
+renderProducts(currentList);
+
+document.getElementById("products")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+
+function enterSearch(event){
+
+if(event.key === "Enter"){
+
+searchProducts();
+
+}
+
+}
+
+
+/* CATEGORY */
+
+function filterCategory(category){
+
+if(category === "All"){
+
+currentList =
+products.slice();
+
+document.getElementById("resultTitle")
+.innerText =
+"All Products";
+
+}
+
+else{
+
+currentList =
+products.filter(function(p){
+
+return p.category === category;
+
+});
+
+document.getElementById("resultTitle")
+.innerText =
+category + " Products";
+
+}
+
+renderProducts(currentList);
+
+document.getElementById("products")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+
+/* SORT */
+
+function sortProducts(){
+
+var type =
+document.getElementById("sortSelect").value;
+
+var list =
+currentList.slice();
+
+if(type === "low"){
+
+list.sort(function(a,b){
+return Number(a.price)-Number(b.price);
+});
+
+}
+
+else if(type === "high"){
+
+list.sort(function(a,b){
+return Number(b.price)-Number(a.price);
+});
+
+}
+
+else if(type === "name"){
+
+list.sort(function(a,b){
+
+return a.name.localeCompare(b.name);
+
+});
+
+}
+
+renderProducts(list);
+
+}
+
+
+/* VIEW PRODUCT */
+
+function viewProduct(id){
+
+var p =
+products.find(function(item){
+return item.id === id;
+});
+
+if(!p) return;
+
+currentProduct = p;
+
+document.getElementById("detailImage")
+.innerHTML =
+safe(p.icon);
+
+document.getElementById("detailName")
+.innerText =
+p.name;
+
+document.getElementById("detailRating")
+.innerText =
+"★★★★★ " + p.rating + " Rating";
+
+document.getElementById("detailPrice")
+.innerText =
+"$" + Number(p.price).toFixed(2);
+
+document.getElementById("detailDescription")
+.innerText =
+p.description;
+
+openModal("productModal");
+
+}
+
+
+/* BUY PRODUCT */
+
+function buyProduct(id){
+
+var p =
+products.find(function(item){
+return item.id === id;
+});
+
+if(!p) return;
+
+currentProduct = p;
+
+if(!p.affiliateLink ||
+p.affiliateLink.indexOf("PASTE_") === 0){
+
+alert(
+"Affiliate link is not connected for this product. Open Admin and add the Alibaba affiliate link."
+);
+
+return;
+
+}
+
+
+/*
+Open the marketplace affiliate link.
+
+The buyer completes the actual purchase
+on the marketplace.
+*/
+
+window.open(
+p.affiliateLink,
+"_blank",
+"noopener,noreferrer"
+);
+
+
+/* SAVE CLICK */
+
+var clicks =
+Number(localStorage.getItem("shopnova_clicks") || 0);
+
+localStorage.setItem(
+"shopnova_clicks",
+clicks + 1
+);
+
+}
+
+
+/* DETAIL BUY */
+
+function buyCurrentProduct(){
+
+if(currentProduct){
+
+buyProduct(currentProduct.id);
+
+}
+
+}
+
+
+/* MODALS */
+
+function openModal(id){
+
+document.getElementById(id)
+.style.display =
+"flex";
+
+}
+
+
+function closeModal(id){
+
+document.getElementById(id)
+.style.display =
+"none";
+
+}
+
+
+/* CART */
+
+function addToCart(id){
+
+var p =
+products.find(function(item){
+return item.id === id;
+});
+
+if(!p) return;
+
+cart.push({
+id:p.id,
+name:p.name,
+price:p.price,
+icon:p.icon
+});
+
+saveCart();
+
+updateCartCount();
+
+alert("Product added to cart.");
+
+}
+
+
+function updateCartCount(){
+
+document.getElementById("cartCount")
+.innerText =
+cart.length;
+
+}
+
+
+function openCart(){
+
+var list =
+document.getElementById("cartList");
+
+list.innerHTML = "";
+
+if(cart.length === 0){
+
+list.innerHTML =
+"<p style='color:#777;margin-top:20px'>Your cart is empty.</p>";
+
+document.getElementById("cartTotal")
+.innerText = "";
+
+openModal("cartModal");
+
+return;
+
+}
+
+var total = 0;
+
+for(var i=0;i<cart.length;i++){
+
+var item = cart[i];
+
+total += Number(item.price);
+
+var div =
+document.createElement("div");
+
+div.className =
+"cart-item";
+
+div.innerHTML = `
+
+<div>
+<strong>${safe(item.icon)} ${safe(item.name)}</strong>
+<br>
+$${Number(item.price).toFixed(2)}
+</div>
+
+<button
+class="remove"
+onclick="removeCart(${i})"
+>
+Remove
+</button>
+
+`;
+
+list.appendChild(div);
+
+}
+
+document.getElementById("cartTotal")
+.innerText =
+"Total: $" + total.toFixed(2);
+
+openModal("cartModal");
+
+}
+
+
+function removeCart(index){
+
+cart.splice(index,1);
+
+saveCart();
+
+openCart();
+
+updateCartCount();
+
+}
+
+
+function checkoutCart(){
+
+alert(
+"Checkout is completed on the marketplace through the product's affiliate Buy Now link. Your cart is only a convenience feature in this single-file version."
+);
+
+}
+
+
+/* WISHLIST */
+
+function toggleWishlist(id){
+
+var key =
+"shopnova_wishlist_" + id;
+
+var exists =
+localStorage.getItem(key);
+
+if(exists){
+
+localStorage.removeItem(key);
+
+alert("Removed from wishlist.");
+
+}
+
+else{
+
+localStorage.setItem(key,"1");
+
+alert("Added to wishlist.");
+
+}
+
+}
+
+
+/* ADMIN */
+
+function showAdmin(){
+
+var panel =
+document.getElementById("adminPanel");
+
+panel.style.display =
+panel.style.display === "block"
+? "none"
+: "block";
+
+panel.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+
+function addProduct(){
+
+var name =
+document.getElementById("pName").value.trim();
+
+var category =
+document.getElementById("pCategory").value;
+
+var price =
+parseFloat(
+document.getElementById("pPrice").value
+);
+
+var oldPrice =
+parseFloat(
+document.getElementById("pOldPrice").value
+);
+
+var rating =
+parseFloat(
+document.getElementById("pRating").value
+);
+
+var icon =
+document.getElementById("pIcon").value.trim();
+
+var description =
+document.getElementById("pDescription").value.trim();
+
+var link =
+document.getElementById("pLink").value.trim();
+
+
+if(!name){
+
+alert("Enter product name.");
+
+return;
+
+}
+
+if(isNaN(price)){
+
+alert("Enter a valid price.");
+
+return;
+
+}
+
+if(!link){
+
+alert("Paste the Alibaba affiliate link.");
+
+return;
+
+}
+
+
+var newProduct = {
+
+id:Date.now(),
+
+name:name,
+
+category:category,
+
+price:price,
+
+oldPrice:
+isNaN(oldPrice)
+? price
+: oldPrice,
+
+rating:
+isNaN(rating)
+? 5
+: rating,
+
+icon:
+icon || "📦",
+
+description:
+description || "Product description.",
+
+affiliateLink:link
+
+};
+
+
+products.push(newProduct);
+
+saveProducts();
+
+currentList =
+products.slice();
+
+renderProducts(currentList);
+
+
+document.getElementById("pName").value="";
+document.getElementById("pPrice").value="";
+document.getElementById("pOldPrice").value="";
+document.getElementById("pRating").value="5";
+document.getElementById("pIcon").value="📦";
+document.getElementById("pDescription").value="";
+document.getElementById("pLink").value="";
+
+
+alert(
+"Product added successfully!"
+);
+
+}
+
+
+function resetProducts(){
+
+if(!confirm(
+"Reset products to the original demo catalog?"
+)){
+
+return;
+
+}
+
+products =
+defaultProducts.slice();
+
+saveProducts();
+
+currentList =
+products.slice();
+
+renderProducts(currentList);
+
+alert("Demo products restored.");
+
+}
+
+
+/* ORDERS */
+
+function showOrders(){
+
+var orders =
+JSON.parse(
+localStorage.getItem("shopnova_orders") || "[]"
+);
+
+var box =
+document.getElementById("ordersContent");
+
+if(orders.length === 0){
+
+box.innerHTML =
+"<p style='color:#777;margin-top:15px'>No local orders yet. Purchases are completed on the marketplace.</p>";
+
+}
+
+else{
+
+box.innerHTML = "";
+
+for(var i=0;i<orders.length;i++){
+
+box.innerHTML += `
+
+<div style="
+padding:15px 0;
+border-bottom:1px solid #ddd;
+">
+
+<strong>
+${safe(orders[i].name)}
+</strong>
+
+<p>
+Price: $${Number(orders[i].price).toFixed(2)}
+</p>
+
+<p>
+Status: ${safe(orders[i].status)}
+</p>
+
+</div>
+
+`;
+
+}
+
+}
+
+openModal("ordersModal");
+
+}
+
+
+/* CLOSE MODAL WHEN CLICKING OUTSIDE */
+
+window.addEventListener(
+"click",
+function(event){
+
+var modals =
+document.querySelectorAll(".modal");
+
+for(var i=0;i<modals.length;i++){
+
+if(event.target === modals[i]){
+
+modals[i].style.display =
+"none";
+
+}
+
+}
+
+});
+
+
+/* START */
+
+renderProducts(products);
+
+updateCartCount();
+
+</script>
+
+</body>
+</html>
