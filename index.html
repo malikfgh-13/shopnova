@@ -1021,6 +1021,7 @@ document.getElementById("pDescription").value.trim();
 const link =
 document.getElementById("pLink").value.trim();
 
+
 if(!name){
 
 showStatus(
@@ -1033,6 +1034,7 @@ return;
 
 }
 
+
 if(isNaN(price)){
 
 showStatus(
@@ -1044,6 +1046,7 @@ showStatus(
 return;
 
 }
+
 
 if(!link){
 
@@ -1063,6 +1066,7 @@ return;
 const {data:sessionData} =
 await supabaseClient.auth.getSession();
 
+
 if(!sessionData.session){
 
 showStatus(
@@ -1076,26 +1080,49 @@ return;
 }
 
 
+/* PRODUCT DATA */
+
 const productData = {
 
 name:name,
+
 category:category,
+
 price:price,
-old_price:isNaN(oldPrice) ? price : oldPrice,
-rating:isNaN(rating) ? 5 : rating,
+
+old_price:isNaN(oldPrice)
+? price
+: oldPrice,
+
+rating:isNaN(rating)
+? 5
+: rating,
+
 icon:icon || "📦",
-image_url:image,
-description:description || "Product description.",
+
+image_url:imageUrl,
+
+description:
+description || "Product description.",
+
 affiliate_link:link,
+
 product_url:link
 
 };
 
 
+/* SAVE EDIT STATE */
+
+const isEditing =
+editingProductId !== null;
+
 let result;
 
 
-if(editingProductId){
+/* UPDATE */
+
+if(isEditing){
 
 result =
 await supabaseClient
@@ -1103,7 +1130,12 @@ await supabaseClient
 .update(productData)
 .eq("id",editingProductId);
 
-}else{
+}
+
+
+/* INSERT */
+
+else{
 
 result =
 await supabaseClient
@@ -1113,13 +1145,16 @@ await supabaseClient
 }
 
 
+/* ERROR */
+
 if(result.error){
 
 console.error(result.error);
 
 showStatus(
 "adminStatus",
-"Database error: " + result.error.message,
+"Database error: " +
+result.error.message,
 "error"
 );
 
@@ -1128,27 +1163,30 @@ return;
 }
 
 
+/* SUCCESS */
+
 editingProductId = null;
 
 document.getElementById("saveProductBtn").innerText =
 "+ Add Product";
 
+
 clearProductForm();
 
 await loadProducts();
 
+
 showStatus(
 "adminStatus",
-editingProductId
-?
-"Product updated."
-:
-"Product saved successfully.",
+
+isEditing
+? "Product updated successfully."
+: "Product saved successfully.",
+
 "success"
 );
 
 }
-
 
 /* =====================================================
    EDIT PRODUCT
