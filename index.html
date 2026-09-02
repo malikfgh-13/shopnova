@@ -1000,11 +1000,11 @@ document.getElementById("pName").value.trim();
 const category =
 document.getElementById("pCategory").value;
 
-const price =
-parseFloat(document.getElementById("pPrice").value);
+const priceValue =
+document.getElementById("pPrice").value.trim();
 
-const oldPrice =
-parseFloat(document.getElementById("pOldPrice").value);
+const oldPriceValue =
+document.getElementById("pOldPrice").value.trim();
 
 const rating =
 parseFloat(document.getElementById("pRating").value);
@@ -1021,7 +1021,6 @@ document.getElementById("pDescription").value.trim();
 const link =
 document.getElementById("pLink").value.trim();
 
-
 if(!name){
 
 showStatus(
@@ -1034,25 +1033,11 @@ return;
 
 }
 
-
-if(isNaN(price)){
-
-showStatus(
-"adminStatus",
-"Enter a valid price.",
-"error"
-);
-
-return;
-
-}
-
-
 if(!link){
 
 showStatus(
 "adminStatus",
-"Enter the affiliate link.",
+"Enter the Alibaba affiliate link.",
 "error"
 );
 
@@ -1066,12 +1051,36 @@ return;
 const {data:sessionData} =
 await supabaseClient.auth.getSession();
 
-
 if(!sessionData.session){
 
 showStatus(
 "adminStatus",
 "Please login first.",
+"error"
+);
+
+return;
+
+}
+
+
+/* PRICE */
+
+const price =
+priceValue === ""
+? 0
+: parseFloat(priceValue);
+
+const oldPrice =
+oldPriceValue === ""
+? price
+: parseFloat(oldPriceValue);
+
+if(isNaN(price)){
+
+showStatus(
+"adminStatus",
+"Enter a valid price.",
 "error"
 );
 
@@ -1112,15 +1121,12 @@ product_url:link
 };
 
 
-/* SAVE EDIT STATE */
+/* EDIT OR ADD */
 
 const isEditing =
 editingProductId !== null;
 
 let result;
-
-
-/* UPDATE */
 
 if(isEditing){
 
@@ -1130,12 +1136,7 @@ await supabaseClient
 .update(productData)
 .eq("id",editingProductId);
 
-}
-
-
-/* INSERT */
-
-else{
+}else{
 
 result =
 await supabaseClient
@@ -1170,19 +1171,15 @@ editingProductId = null;
 document.getElementById("saveProductBtn").innerText =
 "+ Add Product";
 
-
 clearProductForm();
 
 await loadProducts();
 
-
 showStatus(
 "adminStatus",
-
 isEditing
 ? "Product updated successfully."
 : "Product saved successfully.",
-
 "success"
 );
 
