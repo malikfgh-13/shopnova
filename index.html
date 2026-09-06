@@ -2039,7 +2039,49 @@ document.getElementById("adminPanel").style.display =
 init();
 
 </script>
+<!-- ================= AI CHATBOT ================= -->
 
+<button class="chatbot-button" onclick="toggleChatbot()">
+    🤖
+</button>
+
+<div class="chatbot-window" id="chatbotWindow">
+
+    <div class="chatbot-header">
+        <strong>🤖 ShopNova AI</strong>
+
+        <button
+            class="chatbot-close"
+            onclick="toggleChatbot()">
+            ×
+        </button>
+    </div>
+
+    <div class="chatbot-messages" id="chatbotMessages">
+
+        <div class="chat-message chat-bot">
+            Hello! 👋 Welcome to ShopNova.
+            How can I help you find a product?
+        </div>
+
+    </div>
+
+    <div class="chatbot-input">
+
+        <input
+            id="chatbotInput"
+            type="text"
+            placeholder="Ask me something..."
+            onkeydown="chatbotEnter(event)"
+        >
+
+        <button onclick="sendChatMessage()">
+            Send
+        </button>
+
+    </div>
+
+</div>
 </body>
 </html>
 ```
